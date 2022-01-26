@@ -2,4 +2,6 @@
 
 VUB Programiranje mobilnih aplikacija - projekt
 
-Lap timer and tracker application
+
+# Lap timer and tracker application
+
