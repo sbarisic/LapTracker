@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/introFragment">
 
     <fragment
         android:id="@+id/FirstFragment"
@@ -28,7 +28,8 @@
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/FirstFragment"
+            app:launchSingleTop="false" />
     </fragment>
 
 
@@ -40,7 +41,8 @@
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_SettingsFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/FirstFragment"
+            app:launchSingleTop="false" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -49,7 +51,10 @@
         tools:layout="@layout/fragment_intro" >
         <action
             android:id="@+id/action_introFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/FirstFragment"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/FirstFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
 </navigation>
