@@ -14,7 +14,12 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_SettingsFragment"
+            app:destination="@id/SettingsFragment" />
     </fragment>
+
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="hr.vub.laptracker.SecondFragment"
@@ -25,4 +30,16 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="hr.vub.laptracker.SettingsFragment"
+
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_SettingsFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+
 </navigation>
