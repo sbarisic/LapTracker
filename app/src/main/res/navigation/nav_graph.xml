@@ -47,8 +47,8 @@
     <fragment
         android:id="@+id/introFragment"
         android:name="hr.vub.laptracker.IntroFragment"
-        android:label="fragment_intro"
-        tools:layout="@layout/fragment_intro" >
+        android:label="@string/intro_fragment_label"
+        tools:layout="@layout/fragment_intro">
         <action
             android:id="@+id/action_introFragment_to_FirstFragment"
             app:destination="@id/FirstFragment"

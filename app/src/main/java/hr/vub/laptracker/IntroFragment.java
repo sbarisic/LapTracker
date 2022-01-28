@@ -19,16 +19,14 @@ public class IntroFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentIntroBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new CountDownTimer(3000, 1000) {
+        new CountDownTimer(1500, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
             }

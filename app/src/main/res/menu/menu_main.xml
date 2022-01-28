@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="hr.vub.laptracker.MainActivity">
+
+    <item
+        android:id="@+id/action_tracks"
+        android:orderInCategory="90"
+        android:title="@string/action_tracks"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

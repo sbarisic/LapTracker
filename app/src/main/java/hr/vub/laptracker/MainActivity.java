@@ -23,9 +23,13 @@ import hr.vub.laptracker.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //handle permissions first, before map is created. not depicted here
+
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
                                 .RequestMultiplePermissions(), result -> {
@@ -51,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
                             if (fineLocationGranted != null && fineLocationGranted) {
                                 // Precise location access granted.
                             } else if (coarseLocationGranted != null && coarseLocationGranted) {
+                                // TODO not acceptable
                                 // Only approximate location access granted.
                             } else {
-                                // No location access granted.
+                                // TODO close app
                             }
                         }
                 );
@@ -83,6 +88,23 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
 
+    public void loadMap(MapView inMap) {
+        map = inMap;
+
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setBuiltInZoomControls(true);
+        map.setMultiTouchControls(true);
+
+        IMapController mapController = map.getController();
+        mapController.setZoom(15);
+        GeoPoint startPoint = new GeoPoint(45.89857767203944, 16.842182187700285);
+        mapController.setCenter(startPoint);
+
+        MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
+        mLocationOverlay.enableMyLocation();
+        map.getOverlays().add(mLocationOverlay);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -109,12 +131,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

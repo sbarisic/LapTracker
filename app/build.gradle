@@ -49,4 +49,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'org.osmdroid:osmdroid-android:6.1.10'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
 }
