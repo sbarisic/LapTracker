@@ -66,9 +66,7 @@ public class FirstFragment extends Fragment {
         MainActivity mainAct = (MainActivity) getActivity();
         mainAct.loadMap(binding.map);
 
-        NavController navContr = NavHostFragment.findNavController(this);
-
-
+        // NavController navContr = NavHostFragment.findNavController(this);
         return binding.getRoot();
     }
 
