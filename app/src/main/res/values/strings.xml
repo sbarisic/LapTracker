@@ -12,6 +12,12 @@
     <string name="previous">Previous</string>
     <string name="loading">Loading...</string>
 
+    <string name="coarse_title">coarse_title</string>
+    <string name="coarse_message">coarse_message</string>
+
+    <string name="no_permission_title">no_permission_title</string>
+    <string name="no_permission_message">no_permission_message</string>
+
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
