@@ -3,6 +3,7 @@ package hr.vub.laptracker;
 import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,7 +51,7 @@ public class FirstFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        MainActivity act = (MainActivity)getActivity();
+        MainActivity act = (MainActivity) getActivity();
         View decorView = act.getWindow().getDecorView();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -58,38 +59,12 @@ public class FirstFragment extends Fragment {
         } else {
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         }
-
-        getActivity().setContentView(R.layout.fragment_first);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);  // Use filter.xml from step 1
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_tracks) {
-            NavHostFragment.findNavController(this).navigate(R.id.action_FirstFragment_to_SecondFragment);
-            return true;
-        }
-
-        if (id == R.id.action_settings) {
-            NavHostFragment.findNavController(this).navigate(R.id.action_FirstFragment_to_SettingsFragment);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        MainActivity mainAct = (MainActivity) getActivity();
-        mainAct.load(binding.map);
 
         // NavController navContr = NavHostFragment.findNavController(this);
         return binding.getRoot();
@@ -98,11 +73,11 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*binding.buttonFirst.setOnClickListener(view1 -> NavHostFragment.findNavController(FirstFragment.this)
-                .navigate(R.id.action_FirstFragment_to_SecondFragment));
+        binding.btnTracks.setOnClickListener(view1 -> NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment));
+        binding.btnSettings.setOnClickListener(view1 -> NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SettingsFragment));
 
-        binding.buttonSettings.setOnClickListener(view12 -> NavHostFragment.findNavController(FirstFragment.this)
-                .navigate(R.id.action_FirstFragment_to_SettingsFragment));*/
+        MainActivity mainAct = (MainActivity) getActivity();
+        mainAct.load(binding.map);
     }
 
     @Override
@@ -115,7 +90,12 @@ public class FirstFragment extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        //getActivity().setContentView(R.layout.fragment_first);
-        getActivity().recreate();
+        MainActivity act = (MainActivity) getActivity();
+        if (act != null) {
+            act.setContentView(R.layout.fragment_first);
+            act.recreate();
+        } else {
+            Log.d("LAPTRACKER", "This shouldn't ever happen");
+        }
     }
 }
