@@ -2,6 +2,7 @@ package hr.vub.laptracker;
 
 import android.Manifest;
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     public Context ctx = null;
     public MapView map = null;
+    public GPSLocation loc = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +90,18 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
 
-    public void loadMap(MapView inMap) {
-        map = inMap;
+    public void load(MapView inMap) {
+        loc = new GPSLocation(ctx);
+        Location pos = loc.getLocation();
 
+        map = inMap;
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
 
         IMapController mapController = map.getController();
         mapController.setZoom(15);
-        GeoPoint startPoint = new GeoPoint(45.89857767203944, 16.842182187700285);
+        GeoPoint startPoint = new GeoPoint(pos.getLatitude(), pos.getLongitude());
         mapController.setCenter(startPoint);
 
         MyLocationNewOverlay mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
@@ -130,13 +134,6 @@ public class MainActivity extends AppCompatActivity {
             map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
         }
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {

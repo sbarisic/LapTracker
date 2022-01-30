@@ -11,6 +11,8 @@
     <string name="settings">Settings</string>
     <string name="previous">Previous</string>
     <string name="loading">Loading...</string>
+    <string name="btn_start">Start</string>
+
 
     <string name="coarse_title">coarse_title</string>
     <string name="coarse_message">coarse_message</string>
