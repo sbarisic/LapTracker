@@ -34,6 +34,7 @@ import hr.vub.laptracker.databinding.FragmentFirstBinding;
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    private MainActivity act;
 
     @Override
     public void onResume() {
@@ -51,7 +52,7 @@ public class FirstFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        MainActivity act = (MainActivity) getActivity();
+        act = (MainActivity) getActivity();
         View decorView = act.getWindow().getDecorView();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -73,8 +74,15 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.btnTracks.setOnClickListener(view1 -> NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment));
-        binding.btnSettings.setOnClickListener(view1 -> NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SettingsFragment));
+        binding.btnTracks.setOnClickListener(view1 -> {
+            act.map = null;
+            NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment);
+        });
+
+        binding.btnSettings.setOnClickListener(view1 -> {
+            act.map = null;
+            NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SettingsFragment);
+        });
 
         MainActivity mainAct = (MainActivity) getActivity();
         mainAct.load(binding.map);

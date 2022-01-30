@@ -43,6 +43,10 @@
             android:id="@+id/action_SettingsFragment_to_FirstFragment"
             app:destination="@id/FirstFragment"
             app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_SettingsFragment_self"
+            app:destination="@id/SettingsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"

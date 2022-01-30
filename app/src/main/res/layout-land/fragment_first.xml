@@ -9,37 +9,39 @@
 
     <org.osmdroid.views.MapView
         android:id="@+id/map"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+
+    </org.osmdroid.views.MapView>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/btnStart"
             style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
             android:text="@string/btn_start" />
 
         <Button
             android:id="@+id/btnTracks"
             style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
             android:text="@string/action_tracks" />
 
         <Button
             android:id="@+id/btnSettings"
             style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_width="wrap_content"
             android:text="@string/action_settings" />
     </LinearLayout>
 

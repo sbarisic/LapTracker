@@ -5,15 +5,21 @@
     <string name="action_settings">Postavke</string>
     <string name="intro_fragment_label">Učitavanje...</string>
     <string name="first_fragment_label">Prvi fragment</string>
-    <string name="second_fragment_label">Drugi fragment</string>
-    <string name="settings_fragment_label">Postavke fragment</string>
+    <string name="second_fragment_label">Staze</string>
+    <string name="settings_fragment_label">Postavke</string>
     <string name="next">Napred</string>
     <string name="settings">Postavke</string>
     <string name="previous">Nazad</string>
     <string name="loading">Učitavanje...</string>
     <string name="btn_start">Početak</string>
-    <string name="coarse_title">coarse_title</string>
-    <string name="coarse_message">coarse_message</string>
-    <string name="no_permission_title">no_permission_title</string>
-    <string name="no_permission_message">no_permission_message</string>
+    <string name="coarse_title">Dozvole</string>
+    <string name="coarse_message">Aplikacija zahtjeva preciznu lokaciju</string>
+    <string name="no_permission_title">Dozvole</string>
+    <string name="no_permission_message">Dozvola za lokaciju odbijena</string>
+    <string name="language">Jezik - Hrvatski</string>
+    <string name="language_english">Engleski</string>
+    <string name="language_croatian">Hrvatski</string>
+    <string name="language_pref">Postavke jezika</string>
+    <string name="btn_delete_all">Očisti bazu</string>
+    <string name="wait_for_start">Čekam početak</string>
 </resources>

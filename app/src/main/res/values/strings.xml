@@ -5,8 +5,8 @@
     <!-- Strings used for fragments for navigation -->
     <string name="intro_fragment_label">Loading...</string>
     <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="settings_fragment_label">Settings Fragment</string>
+    <string name="second_fragment_label">Tracks</string>
+    <string name="settings_fragment_label">Settings</string>
     <string name="next">Next</string>
     <string name="settings">Settings</string>
     <string name="previous">Previous</string>
@@ -14,11 +14,17 @@
     <string name="btn_start">Start</string>
 
 
-    <string name="coarse_title">coarse_title</string>
-    <string name="coarse_message">coarse_message</string>
+    <string name="coarse_title">Permissions</string>
+    <string name="coarse_message">The app requires precise location</string>
 
-    <string name="no_permission_title">no_permission_title</string>
-    <string name="no_permission_message">no_permission_message</string>
+    <string name="no_permission_title">Permissions</string>
+    <string name="no_permission_message">Location permissions denied</string>
+    <string name="language">Language - English</string>
+    <string name="language_english">English</string>
+    <string name="language_croatian">Croatian</string>
+    <string name="language_pref">Language preferences</string>
+    <string name="btn_delete_all">Clear database</string>
+    <string name="wait_for_start">Waiting for start</string>
 
 
     <!-- Preference Titles -->

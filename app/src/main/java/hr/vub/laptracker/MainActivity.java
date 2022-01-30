@@ -1,8 +1,11 @@
 package hr.vub.laptracker;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +27,7 @@ import org.osmdroid.views.overlay.Polyline;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import hr.vub.laptracker.databinding.ActivityMainBinding;
 
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
+        LapTrackerDb db = LapTrackerDb.getDatabase(this);
+        List<Track> tracks = db.trackDAO().getTracks();
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -57,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     public void updateLocation(Location pos) {
         if (map == null)
             return;
-
         Log.w("LAPTRACKER", "updateLocation");
 
         GeoPoint geoPos = new GeoPoint(pos.getLatitude(), pos.getLongitude());
@@ -85,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         GeoPoint startPoint = new GeoPoint(pos.getLatitude(), pos.getLongitude());
         mapController.setCenter(startPoint);
 
-
         // color it
         // https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/drawing/ShowAdvancedPolylineStyles.java#L125-L180
         // https://github.com/osmdroid/osmdroid/issues/1726
@@ -98,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateLogic(GeoPoint curLoc) {
+        if (map == null)
+            return;
+
         Log.w("LAPTRACKER", "updateLogic");
 
         // Center map to "player"
