@@ -50,6 +50,9 @@ dependencies {
 
     implementation 'org.osmdroid:osmdroid-android:6.1.10'
     implementation 'com.github.MKergall:osmbonuspack:6.7.0'
-
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
+
+    def room_version = "2.4.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 }

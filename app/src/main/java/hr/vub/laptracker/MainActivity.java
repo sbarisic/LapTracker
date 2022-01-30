@@ -86,10 +86,13 @@ public class MainActivity extends AppCompatActivity {
         mapController.setCenter(startPoint);
 
 
+        // color it
+        // https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/drawing/ShowAdvancedPolylineStyles.java#L125-L180
+        // https://github.com/osmdroid/osmdroid/issues/1726
         Polyline line = new Polyline();
-
         curTrack = GenerateTrack();
         line.setPoints(curTrack);
+
 
         map.getOverlayManager().add(line);
     }
