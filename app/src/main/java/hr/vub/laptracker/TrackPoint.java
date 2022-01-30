@@ -33,6 +33,10 @@ public class TrackPoint {
         this.lat = lat;
     }
 
+    public TrackPoint(@NonNull int track_id, int index, GeoPoint pt) {
+        this(track_id, index, pt.getLatitude(), pt.getLongitude());
+    }
+
     public GeoPoint toGeoPoint() {
         return new GeoPoint(lat, lon);
     }

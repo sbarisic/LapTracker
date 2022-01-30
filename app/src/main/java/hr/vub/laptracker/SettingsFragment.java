@@ -47,7 +47,9 @@ public class SettingsFragment extends Fragment {
         });
 
         binding.btnClearDb.setOnClickListener(view1 -> {
-            // TODO: clear database
+            TrackDAO dao = act.db.trackDAO();
+            dao.deleteAllTrackPoints();
+            dao.deleteAllTracks();
         });
     }
 

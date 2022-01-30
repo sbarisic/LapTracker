@@ -25,11 +25,11 @@ public class SecondFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity act = (MainActivity) getActivity();
 
         binding.btnNewTrack.setOnClickListener(view1 -> {
-
-            // NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
-
+            act.startRecordingMode();
+            NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
         });
     }
 
@@ -38,5 +38,4 @@ public class SecondFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }

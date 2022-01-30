@@ -27,6 +27,10 @@
     <string name="wait_for_start">Waiting for start</string>
     <string name="txt_no_track_selected">No track selected</string>
     <string name="btn_new_track">New Track</string>
+    <string name="txt_recording_track">Recording track...</string>
+    <string name="btn_save_track">Save</string>
+    <string name="txt_saving_track">Saving track</string>
+    <string name="btn_cancel">Cancel</string>
 
 
     <!-- Preference Titles -->

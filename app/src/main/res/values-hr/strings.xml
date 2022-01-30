@@ -23,4 +23,8 @@
     <string name="wait_for_start">Čekam početak</string>
     <string name="txt_no_track_selected">Staza nije odabrana</string>
     <string name="btn_new_track">Nova Staza</string>
+    <string name="txt_recording_track">Generiram stazu...</string>
+    <string name="btn_save_track">Spremi</string>
+    <string name="txt_saving_track">Spremam stazu</string>
+    <string name="btn_cancel">Odustani</string>
 </resources>

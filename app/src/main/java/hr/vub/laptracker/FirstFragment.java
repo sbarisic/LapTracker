@@ -1,32 +1,24 @@
 package hr.vub.laptracker;
 
-import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import org.osmdroid.api.IMapController;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import hr.vub.laptracker.databinding.FragmentFirstBinding;
 
@@ -75,7 +67,13 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.btnStart.setOnClickListener(view1 -> {
-
+            if (act.recordingMode) {
+                binding.txtOutput.setText(R.string.loading);
+                act.stopRecordingModeAndSave();
+                showSaveDialog();
+            } else {
+                // TODO start measuring time
+            }
         });
 
         binding.btnTracks.setOnClickListener(view1 -> {
@@ -88,13 +86,62 @@ public class FirstFragment extends Fragment {
             NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SettingsFragment);
         });
 
-        act.load(binding.map, this);
+        reloadMap();
+    }
+
+    void reloadMap() {
+        act.load(binding.map);
 
         if (act.selectedTrack == null) {
             binding.txtOutput.setText(R.string.txt_no_track_selected);
         } else {
             binding.txtOutput.setText(act.selectedTrack.track_id);
         }
+
+        if (act.recordingMode) {
+            binding.txtOutput.setText(R.string.txt_recording_track);
+            binding.btnStart.setText(R.string.btn_save_track);
+        }
+    }
+
+    void showSaveDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.txt_saving_track);
+
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton(R.string.btn_save_track, (dialog, which) -> {
+            String trackTitle = input.getText().toString();
+
+            TrackDAO dao = act.db.trackDAO();
+
+            Track newTrack = new Track(trackTitle, 0);
+            dao.insert(newTrack);
+
+            List<Track> allTracks = dao.getTracks();
+            newTrack = allTracks.get(allTracks.size() - 1);
+
+            ArrayList<TrackPoint> newTrackPoints = new ArrayList<>();
+            for (int i = 0; i < act.curTrack.size(); i++) {
+                newTrackPoints.add(new TrackPoint(newTrack.id, i, act.curTrack.get(i)));
+            }
+
+            dao.insert(newTrackPoints);
+
+            act.stopLogic();
+            reloadMap();
+        });
+
+        builder.setNegativeButton(R.string.btn_cancel, (dialog, which) -> {
+            dialog.cancel();
+
+            act.stopLogic();
+            reloadMap();
+        });
+
+        builder.show();
     }
 
     @Override
