@@ -1,11 +1,8 @@
 package hr.vub.laptracker;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,10 +21,8 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import hr.vub.laptracker.databinding.ActivityMainBinding;
 
@@ -40,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     public MapView map = null;
     public GPSLocation loc = null;
 
+    public LapTrackerDb db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        LapTrackerDb db = LapTrackerDb.getDatabase(this);
-        List<Track> tracks = db.trackDAO().getTracks();
+        db = LapTrackerDb.getDatabase(this);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -70,15 +66,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     Marker curPosMarker = null;
-    ArrayList<GeoPoint> curTrack = null;
+    Track selectedTrack = null;
+    List<GeoPoint> curTrack = null;
 
-    public void load(MapView inMap) {
-        ctx = getApplicationContext();
+    public void stopLogic() {
+        map = null;
+        selectedTrack = null;
         curPosMarker = null;
+    }
+
+    public void load(MapView inMap, FirstFragment frag) {
+        ctx = getApplicationContext();
+
+        selectedTrack = db.trackDAO().getSelectedTrack();
 
         loc = new GPSLocation(ctx, this);
         loc.requestLocationUpdates();
-        Location pos = loc.getLocation();
 
         map = inMap;
         map.setTileSource(TileSourceFactory.MAPNIK);
@@ -87,18 +90,42 @@ public class MainActivity extends AppCompatActivity {
 
         IMapController mapController = map.getController();
         mapController.setZoom(15);
-        GeoPoint startPoint = new GeoPoint(pos.getLatitude(), pos.getLongitude());
-        mapController.setCenter(startPoint);
+        //GeoPoint startPoint = new GeoPoint(pos.getLatitude(), pos.getLongitude());
+        //mapController.setCenter(startPoint);
 
         // color it
         // https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/drawing/ShowAdvancedPolylineStyles.java#L125-L180
         // https://github.com/osmdroid/osmdroid/issues/1726
-        Polyline line = new Polyline();
-        curTrack = GenerateTrack();
-        line.setPoints(curTrack);
 
+        if (selectedTrack != null) {
+            Polyline line = new Polyline();
 
-        map.getOverlayManager().add(line);
+            List<TrackPoint> trackPoints = db.trackDAO().getPointsForTrack(selectedTrack.id);
+            curTrack = new ArrayList<>();
+
+            for (int i = 0; i < trackPoints.size(); i++) {
+                curTrack.add(trackPoints.get(i).toGeoPoint());
+            }
+
+            line.setPoints(curTrack);
+            map.getOverlayManager().add(line);
+
+            // Start marker
+            Marker startMarker = new Marker(map);
+            startMarker.setAnchor(0.2f, 0.2f);
+            startMarker.setIcon(AppCompatResources.getDrawable(ctx, R.drawable.circle_green));
+            startMarker.setPosition(curTrack.get(0));
+            map.getOverlayManager().add(startMarker);
+
+            mapController.setCenter(curTrack.get(0));
+
+            // End marker
+            Marker endMarker = new Marker(map);
+            endMarker.setAnchor(0.2f, 0.2f);
+            endMarker.setIcon(AppCompatResources.getDrawable(ctx, R.drawable.circle_red));
+            endMarker.setPosition(curTrack.get(curTrack.size() - 1));
+            map.getOverlayManager().add(endMarker);
+        }
     }
 
     public void updateLogic(GeoPoint curLoc) {

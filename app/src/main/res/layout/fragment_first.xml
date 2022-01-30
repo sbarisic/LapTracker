@@ -42,7 +42,8 @@
         android:id="@+id/txt_output"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:gravity="center"
+        android:text="@string/txt_no_track_selected"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <org.osmdroid.views.MapView

@@ -25,6 +25,8 @@
     <string name="language_pref">Language preferences</string>
     <string name="btn_delete_all">Clear database</string>
     <string name="wait_for_start">Waiting for start</string>
+    <string name="txt_no_track_selected">No track selected</string>
+    <string name="btn_new_track">New Track</string>
 
 
     <!-- Preference Titles -->

@@ -66,6 +66,12 @@ public class SettingsFragment extends Fragment {
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
 
-        NavHostFragment.findNavController(SettingsFragment.this).navigate(R.id.action_SettingsFragment_self);
+        // NavHostFragment.findNavController(SettingsFragment.this).navigate(R.id.action_SettingsFragment_self);
+
+        /*getFragmentManager()
+                .beginTransaction()
+                .detach(SettingsFragment.this)
+                .attach(SettingsFragment.this)
+                .commit();*/
     }
 }

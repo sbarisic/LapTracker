@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LapTracker</string>
     <string name="action_tracks">Staze</string>
     <string name="action_settings">Postavke</string>
     <string name="intro_fragment_label">Učitavanje...</string>
@@ -22,4 +21,6 @@
     <string name="language_pref">Postavke jezika</string>
     <string name="btn_delete_all">Očisti bazu</string>
     <string name="wait_for_start">Čekam početak</string>
+    <string name="txt_no_track_selected">Staza nije odabrana</string>
+    <string name="btn_new_track">Nova Staza</string>
 </resources>

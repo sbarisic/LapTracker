@@ -74,18 +74,27 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.btnStart.setOnClickListener(view1 -> {
+
+        });
+
         binding.btnTracks.setOnClickListener(view1 -> {
-            act.map = null;
+            act.stopLogic();
             NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment);
         });
 
         binding.btnSettings.setOnClickListener(view1 -> {
-            act.map = null;
+            act.stopLogic();
             NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SettingsFragment);
         });
 
-        MainActivity mainAct = (MainActivity) getActivity();
-        mainAct.load(binding.map);
+        act.load(binding.map, this);
+
+        if (act.selectedTrack == null) {
+            binding.txtOutput.setText(R.string.txt_no_track_selected);
+        } else {
+            binding.txtOutput.setText(act.selectedTrack.track_id);
+        }
     }
 
     @Override
