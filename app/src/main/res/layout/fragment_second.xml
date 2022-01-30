@@ -14,4 +14,9 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_new_track" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

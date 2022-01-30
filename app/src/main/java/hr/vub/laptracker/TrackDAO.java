@@ -28,6 +28,9 @@ public interface TrackDAO {
     @Query("UPDATE tracks SET selected_track = (CASE id WHEN :id THEN 1 ELSE 0 END)")
     void selectTrack(int id);
 
+    @Query("UPDATE tracks SET selected_track = 0")
+    void clearSelectedTrack();
+
     ////////////////////////////////////////////////////////////////////////////////
     // TrackPoint
     ////////////////////////////////////////////////////////////////////////////////

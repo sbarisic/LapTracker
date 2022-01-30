@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     Polyline line = null;
     List<GeoPoint> curTrack = null;
-    
+
 
     public void stopLogic() {
         if (map != null) {
@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startRecordingMode() {
+        db.trackDAO().clearSelectedTrack();
+        curTrack = null;
         recordingMode = true;
         logicPaused = false;
     }
