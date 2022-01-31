@@ -27,4 +27,6 @@
     <string name="btn_save_track">Spremi</string>
     <string name="txt_saving_track">Spremam stazu</string>
     <string name="btn_cancel">Odustani</string>
+    <string name="new_record">Rekord:</string>
+    <string name="finish">Kraj:</string>
 </resources>

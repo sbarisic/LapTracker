@@ -31,6 +31,8 @@
     <string name="btn_save_track">Save</string>
     <string name="txt_saving_track">Saving track</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="new_record">Record:</string>
+    <string name="finish">Finish:</string>
 
 
     <!-- Preference Titles -->

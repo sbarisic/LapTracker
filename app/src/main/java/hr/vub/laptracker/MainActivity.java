@@ -282,10 +282,13 @@ public class MainActivity extends AppCompatActivity {
     void calculateAndSaveBestTime() {
         int oldBestTime = selectedTrack.best_time_ms;
 
-        if (timeDelta < oldBestTime) {
+        if (timeDelta < oldBestTime || oldBestTime == 0) {
             selectedTrack.best_time_ms = timeDelta;
             db.trackDAO().update(selectedTrack);
-            // new record
+
+            firstFragment.finishRace(timeDelta, true);
+        } else {
+            firstFragment.finishRace(timeDelta, false);
         }
     }
 

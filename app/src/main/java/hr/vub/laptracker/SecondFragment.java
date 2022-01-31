@@ -46,7 +46,7 @@ public class SecondFragment extends Fragment {
             act.db.trackDAO().selectTrack(clickedTrack.id);
 
             NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
-            // Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+            //Toast .makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         });
 
         recyclerView.setAdapter(adapter);

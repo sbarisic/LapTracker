@@ -28,7 +28,7 @@ public abstract class LapTrackerDb extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), LapTrackerDb.class, "laptracker_db").allowMainThreadQueries().fallbackToDestructiveMigration().build();
 
-                    FillDatabase();
+                    // FillDatabase();
                 }
             }
         }

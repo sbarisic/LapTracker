@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -102,6 +103,21 @@ public class FirstFragment extends Fragment {
         float seconds = (ms / 1000.0f) % 60;
 
         binding.txtOutput.setText(String.format("%d:%.2fs", minutes, seconds));
+    }
+
+    void finishRace(int totalMs, boolean newRecord) {
+        int minutes = (totalMs / 1000) / 60;
+        float seconds = (totalMs / 1000.0f) % 60;
+
+        String prefix = getResources().getString(R.string.finish);
+
+        if (newRecord)
+            prefix = getResources().getString(R.string.new_record);
+
+        String timeString = String.format("%d:%.2fs", minutes, seconds);
+
+        binding.txtOutput.setText(prefix + " " + timeString);
+        Toast.makeText(getActivity(), timeString, Toast.LENGTH_SHORT).show();
     }
 
     void reloadMap() {
