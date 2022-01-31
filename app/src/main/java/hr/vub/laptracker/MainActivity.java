@@ -48,15 +48,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-        db = LapTrackerDb.getDatabase(this);
-        loc = new GPSLocation(ctx, this);
-        loc.requestLocationUpdates();
+        createGPSandDB();
 
         stopLogic();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
+
+    void createGPSandDB() {
+        db = LapTrackerDb.getDatabase(this);
+        loc = new GPSLocation(ctx, this);
+        loc.requestLocationUpdates();
     }
 
     public void updateLocation(Location pos) {
@@ -134,7 +138,11 @@ public class MainActivity extends AppCompatActivity {
     public void load(MapView inMap) {
         ctx = getApplicationContext();
 
-        selectedTrack = db.trackDAO().getSelectedTrack();
+        if (db == null && loc == null)
+            createGPSandDB();
+
+        TrackDAO dao = db.trackDAO();
+        selectedTrack = dao.getSelectedTrack();
         Location curLoc = loc.getLocation();
 
         map = inMap;
