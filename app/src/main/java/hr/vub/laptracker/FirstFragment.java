@@ -44,7 +44,9 @@ public class FirstFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         act = (MainActivity) getActivity();
+        act.firstFragment = this;
         View decorView = act.getWindow().getDecorView();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -71,8 +73,14 @@ public class FirstFragment extends Fragment {
                 binding.txtOutput.setText(R.string.loading);
                 act.stopRecordingModeAndSave();
                 showSaveDialog();
+            } else if (act.raceMode) {
+                act.stopRaceMode();
+                reloadMap();
             } else {
-                // TODO start measuring time
+                if (act.selectedTrack != null) {
+                    act.startRaceMode();
+                    reloadMap();
+                }
             }
         });
 
@@ -89,8 +97,16 @@ public class FirstFragment extends Fragment {
         reloadMap();
     }
 
+    void updateTime(int ms) {
+        int minutes = (ms / 1000) / 60;
+        float seconds = (ms / 1000.0f) % 60;
+
+        binding.txtOutput.setText(String.format("%d:%.2fs", minutes, seconds));
+    }
+
     void reloadMap() {
         act.load(binding.map);
+        binding.btnStart.setText(R.string.btn_start);
 
         if (act.selectedTrack == null) {
             binding.txtOutput.setText(R.string.txt_no_track_selected);
@@ -101,6 +117,10 @@ public class FirstFragment extends Fragment {
         if (act.recordingMode) {
             binding.txtOutput.setText(R.string.txt_recording_track);
             binding.btnStart.setText(R.string.btn_save_track);
+        }
+
+        if (act.raceMode) {
+            binding.btnStart.setText(R.string.btn_cancel);
         }
     }
 

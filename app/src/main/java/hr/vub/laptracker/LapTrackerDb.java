@@ -41,14 +41,14 @@ public abstract class LapTrackerDb extends RoomDatabase {
         dao.deleteAllTrackPoints();
 
         // Generate tracks
-        Track t1 = new Track("Trojstvo - Sandrovac", 600000);
+        Track t1 = new Track("Trojstvo - Sandrovac", 611132);
         dao.insert(t1);
 
-        Track t2 = new Track("Track B", 540000);
+        /*Track t2 = new Track("Track B", 540000);
         dao.insert(t2);
 
         Track t3 = new Track("Track C", 660000);
-        dao.insert(t3);
+        dao.insert(t3);*/
 
         // Generate points
 

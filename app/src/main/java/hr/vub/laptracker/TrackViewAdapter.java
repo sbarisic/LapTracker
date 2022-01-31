@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class TrackViewAdapter extends RecyclerView.Adapter<TrackViewAdapter.ViewHolder> {
 
@@ -36,10 +38,10 @@ public class TrackViewAdapter extends RecyclerView.Adapter<TrackViewAdapter.View
         Track curTrack = mData.get(position);
 
         int minutes = (curTrack.best_time_ms / 1000) / 60;
-        int seconds = (curTrack.best_time_ms / 1000) % 60;
+        float seconds = (curTrack.best_time_ms / 1000.0f) % 60;
 
         holder.titleView.setText(curTrack.track_id);
-        holder.timeView.setText(String.format("%dm %ds", minutes, seconds));
+        holder.timeView.setText(String.format("%d:%.2fs", minutes, seconds));
     }
 
     // total number of rows

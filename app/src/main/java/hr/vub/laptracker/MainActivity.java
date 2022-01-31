@@ -32,10 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
 
     public Context ctx = null;
-    public MapView map = null;
     public GPSLocation loc = null;
-
-    public LapTrackerDb db;
+    public LapTrackerDb db = null;
+    public FirstFragment firstFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +44,15 @@ public class MainActivity extends AppCompatActivity {
         ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        db = LapTrackerDb.getDatabase(this);
-
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
+
+        db = LapTrackerDb.getDatabase(this);
+        loc = new GPSLocation(ctx, this);
+        loc.requestLocationUpdates();
+
+        stopLogic();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateLocation(Location pos) {
         if (map == null)
             return;
-        Log.w("LAPTRACKER", "updateLocation");
+        //Log.w("LAPTRACKER", "updateLocation");
 
         GeoPoint geoPos = new GeoPoint(pos.getLatitude(), pos.getLongitude());
         updateLogic(geoPos);
@@ -67,11 +70,17 @@ public class MainActivity extends AppCompatActivity {
 
     boolean logicPaused = false;
     boolean recordingMode = false;
+    boolean raceMode = false;
 
+    MapView map = null;
     Marker curPosMarker = null;
     Track selectedTrack = null;
     Marker startMarker = null;
     Marker endMarker = null;
+
+    long startTime = 0;
+    long endTime = 0;
+    int timeDelta = 0;
 
     Polyline line = null;
     List<GeoPoint> curTrack = null;
@@ -82,7 +91,10 @@ public class MainActivity extends AppCompatActivity {
             map.getOverlayManager().clear();
         }
 
-        logicPaused = true;
+         startTime = 0;
+         endTime = 0;
+         timeDelta = 0;
+
         map = null;
         line = null;
         curTrack = null;
@@ -93,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         endMarker = null;
 
         recordingMode = false;
+        raceMode = false;
+        logicPaused = true;
     }
 
     public void startRecordingMode() {
@@ -107,21 +121,31 @@ public class MainActivity extends AppCompatActivity {
         logicPaused = true;
     }
 
+    public void startRaceMode() {
+        raceMode = true;
+        logicPaused = false;
+    }
+
+    public void stopRaceMode() {
+        raceMode = false;
+        logicPaused = true;
+    }
+
     public void load(MapView inMap) {
         ctx = getApplicationContext();
 
         selectedTrack = db.trackDAO().getSelectedTrack();
-
-        loc = new GPSLocation(ctx, this);
-        loc.requestLocationUpdates();
+        Location curLoc = loc.getLocation();
 
         map = inMap;
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
 
+
         IMapController mapController = map.getController();
         mapController.setZoom(15);
+        mapController.setCenter(new GeoPoint(curLoc.getLatitude(), curLoc.getLongitude()));
         //GeoPoint startPoint = new GeoPoint(pos.getLatitude(), pos.getLongitude());
         //mapController.setCenter(startPoint);
 
@@ -177,11 +201,7 @@ public class MainActivity extends AppCompatActivity {
         if (map == null)
             return;
 
-        Log.w("LAPTRACKER", "updateLogic");
-
-        // Center map to "player"
-        IMapController mapController = map.getController();
-        mapController.setCenter(curLoc);
+        //Log.w("LAPTRACKER", "updateLogic");
 
         if (curPosMarker == null) {
             curPosMarker = new Marker(map);
@@ -195,6 +215,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (logicPaused)
             return;
+
+        // Center map to "player"
+        IMapController mapController = map.getController();
+        mapController.setCenter(curLoc);
 
         if (recordingMode) {
             if (curTrack == null)
@@ -218,11 +242,50 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if (closestIdx >= 0) {
+                if (closestIdx >= 0 && closestDist < 5) {
+                    if (startTime == 0){
+                        startTime = System.currentTimeMillis();
+                        Log.w("LAPTRACKER", "Start!");
+                    }
+
+                    if (closestIdx == len - 1) {
+                        if (endTime == 0)
+                            endTime = System.currentTimeMillis();
+
+                        Log.w("LAPTRACKER", "Finish 1!");
+                    }
+
+
                     Log.w("LAPTRACKER", "Idx = " + closestIdx);
                     Log.w("LAPTRACKER", "Dist = " + closestDist);
+
+                    int delta = (int)(System.currentTimeMillis() - startTime);
+                    firstFragment.updateTime(delta);
+                }
+
+                if (closestIdx == len - 1 && closestDist < 15) {
+                    if (endTime == 0)
+                        endTime = System.currentTimeMillis();
+
+                    Log.w("LAPTRACKER", "Finish 2!");
+                }
+
+                if (startTime != 0 && endTime != 0) {
+                    timeDelta = (int)(endTime - startTime);
+                    stopRaceMode();
+                    calculateAndSaveBestTime();
                 }
             }
+        }
+    }
+
+    void calculateAndSaveBestTime() {
+        int oldBestTime = selectedTrack.best_time_ms;
+
+        if (timeDelta < oldBestTime) {
+            selectedTrack.best_time_ms = timeDelta;
+            db.trackDAO().update(selectedTrack);
+            // new record
         }
     }
 
