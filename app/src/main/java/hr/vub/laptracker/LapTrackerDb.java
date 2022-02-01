@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {Track.class, TrackPoint.class}, version = 8, exportSchema = false)
+@Database(entities = {Track.class, TrackPoint.class}, version = 9, exportSchema = false)
 public abstract class LapTrackerDb extends RoomDatabase {
     public abstract TrackDAO trackDAO();
 
@@ -28,7 +28,7 @@ public abstract class LapTrackerDb extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), LapTrackerDb.class, "laptracker_db").allowMainThreadQueries().fallbackToDestructiveMigration().build();
 
-                     // FillDatabase();
+                     FillDatabase();
                 }
             }
         }
@@ -44,19 +44,22 @@ public abstract class LapTrackerDb extends RoomDatabase {
         Track t1 = new Track("Trojstvo - Sandrovac", 0, 0);
         dao.insert(t1);
 
+        Track t2 = new Track("empty_test", 0, 0);
+        dao.insert(t2);
+
         Track selTrack = dao.getTracks().get(0);
-
         List<GeoPoint> geoPoints = GenerateTrack();
-        ArrayList<TrackPoint> trackPts = new ArrayList<>();
 
+        // Calculate track points
+        ArrayList<TrackPoint> trackPts = new ArrayList<>();
         for (int i = 0; i < geoPoints.size(); i++) {
-            TrackPoint pt = new TrackPoint(selTrack.id, i, geoPoints.get(i).getLatitude(), geoPoints.get(i).getLongitude());
+            TrackPoint pt = new TrackPoint(selTrack.id, i, geoPoints.get(i));
             trackPts.add(pt);
         }
-
-        selTrack.distance = MainActivity.measureDistance(geoPoints);
-        dao.update(selTrack);
         dao.insert(trackPts);
+
+        selTrack.calcDist(geoPoints);
+        dao.update(selTrack);
     }
 
     static ArrayList<GeoPoint> GenerateTrack() {

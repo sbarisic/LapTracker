@@ -26,7 +26,10 @@ public class TrackPoint {
     @ColumnInfo(name = "lat")
     public double lat;
 
-    public TrackPoint(@NonNull int track_id, int index, double lat, double lon) {
+    @ColumnInfo(name = "alt")
+    public double alt;
+
+    public TrackPoint(@NonNull int track_id, int index, double lat, double lon, double alt) {
         this.track_id = track_id;
         this.index = index;
         this.lon = lon;
@@ -34,10 +37,10 @@ public class TrackPoint {
     }
 
     public TrackPoint(@NonNull int track_id, int index, GeoPoint pt) {
-        this(track_id, index, pt.getLatitude(), pt.getLongitude());
+        this(track_id, index, pt.getLatitude(), pt.getLongitude(), pt.getAltitude());
     }
 
     public GeoPoint toGeoPoint() {
-        return new GeoPoint(lat, lon);
+        return new GeoPoint(lat, lon, alt);
     }
 }

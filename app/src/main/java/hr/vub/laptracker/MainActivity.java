@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-        createGPSandDB();
-
         stopLogic();
+        createGPSandDB();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         //Log.w("LAPTRACKER", "updateLocation");
 
-        GeoPoint geoPos = new GeoPoint(pos.getLatitude(), pos.getLongitude());
+        GeoPoint geoPos = new GeoPoint(pos.getLatitude(), pos.getLongitude(), pos.getAltitude());
         updateLogic(geoPos);
     }
 
@@ -77,27 +77,37 @@ public class MainActivity extends AppCompatActivity {
     boolean raceMode = false;
 
     MapView map = null;
-    Marker curPosMarker = null;
     Track selectedTrack = null;
+
+    Marker curPosMarker = null;
     Marker startMarker = null;
     Marker endMarker = null;
+    Polyline line = null;
 
     long startTime = 0;
     long endTime = 0;
     int timeDelta = 0;
 
-    Polyline line = null;
     List<GeoPoint> curTrack = null;
 
+    void removeMarkers() {
+        if (map != null)
+            map.getOverlays().clear();
+
+        line = null;
+        curPosMarker = null;
+        startMarker = null;
+        endMarker = null;
+    }
 
     public void stopLogic() {
         if (map != null) {
-            map.getOverlayManager().clear();
+            removeMarkers();
         }
 
-         startTime = 0;
-         endTime = 0;
-         timeDelta = 0;
+        startTime = 0;
+        endTime = 0;
+        timeDelta = 0;
 
         map = null;
         line = null;
@@ -148,17 +158,17 @@ public class MainActivity extends AppCompatActivity {
         selectedTrack = dao.getSelectedTrack();
         Location curLoc = loc.getLocation();
 
-        map = inMap;
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
+        inMap.getOverlays().clear();
+        inMap.setTileSource(TileSourceFactory.MAPNIK);
+        inMap.setBuiltInZoomControls(true);
+        inMap.setMultiTouchControls(true);
 
-
-        IMapController mapController = map.getController();
+        IMapController mapController = inMap.getController();
         mapController.setZoom(15);
         mapController.setCenter(new GeoPoint(curLoc.getLatitude(), curLoc.getLongitude()));
-        //GeoPoint startPoint = new GeoPoint(pos.getLatitude(), pos.getLongitude());
-        //mapController.setCenter(startPoint);
+
+        map = inMap;
+        removeMarkers();
 
         // color it
         // https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/drawing/ShowAdvancedPolylineStyles.java#L125-L180
@@ -172,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
                 curTrack.add(trackPoints.get(i).toGeoPoint());
             }
 
-            updateLine(curTrack);
             mapController.setCenter(curTrack.get(0));
+            updateLine(curTrack);
         }
     }
 
@@ -183,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (line == null) {
             line = new Polyline();
-            map.getOverlayManager().add(line);
+            map.getOverlays().add(line);
         }
 
         line.setPoints(points);
@@ -193,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             startMarker = new Marker(map);
             startMarker.setAnchor(0.2f, 0.2f);
             startMarker.setIcon(AppCompatResources.getDrawable(ctx, R.drawable.circle_green));
-            map.getOverlayManager().add(startMarker);
+            map.getOverlays().add(startMarker);
         }
 
         // End marker
@@ -201,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             endMarker = new Marker(map);
             endMarker.setAnchor(0.2f, 0.2f);
             endMarker.setIcon(AppCompatResources.getDrawable(ctx, R.drawable.circle_red));
-            map.getOverlayManager().add(endMarker);
+            map.getOverlays().add(endMarker);
         }
 
         startMarker.setPosition(points.get(0));
@@ -254,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (closestIdx >= 0 && closestDist < 5) {
-                    if (startTime == 0){
+                    if (startTime == 0) {
                         startTime = System.currentTimeMillis();
                         Log.w("LAPTRACKER", "Start!");
                     }
@@ -269,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("LAPTRACKER", "Idx = " + closestIdx);
                     Log.w("LAPTRACKER", "Dist = " + closestDist);
 
-                    int delta = (int)(System.currentTimeMillis() - startTime);
+                    int delta = (int) (System.currentTimeMillis() - startTime);
                     firstFragment.updateTime(delta);
                 }
 
@@ -281,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (startTime != 0 && endTime != 0) {
-                    timeDelta = (int)(endTime - startTime);
+                    timeDelta = (int) (endTime - startTime);
                     stopRaceMode();
                     calculateAndSaveBestTime();
                 }
@@ -304,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static int measureDistance(List<GeoPoint> points) {
+    /*static int measureDistance(List<GeoPoint> points) {
         double dist = 0;
         GeoPoint prevPoint = points.get(0);
 
@@ -315,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return (int) dist;
-    }
+    }*/
 
     @Override
     public void onResume() {

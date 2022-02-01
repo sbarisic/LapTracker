@@ -20,6 +20,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import hr.vub.laptracker.databinding.FragmentFirstBinding;
 
@@ -48,6 +50,7 @@ public class FirstFragment extends Fragment {
 
         act = (MainActivity) getActivity();
         act.firstFragment = this;
+
         View decorView = act.getWindow().getDecorView();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -60,9 +63,6 @@ public class FirstFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
-
-
-        // NavController navContr = NavHostFragment.findNavController(this);
         return binding.getRoot();
     }
 
@@ -154,8 +154,9 @@ public class FirstFragment extends Fragment {
             String trackTitle = input.getText().toString();
             TrackDAO dao = act.db.trackDAO();
 
-            Track newTrack = new Track(trackTitle, 0, MainActivity.measureDistance(act.curTrack));
+            Track newTrack = new Track(trackTitle, 0, 0);
             newTrack.best_time_ms = (int)(act.endTime - act.startTime);
+            newTrack.calcDist(act.curTrack);
             newTrack.calcAvgSpeed();
 
             dao.insert(newTrack);

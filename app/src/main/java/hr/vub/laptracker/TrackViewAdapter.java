@@ -25,6 +25,11 @@ public class TrackViewAdapter extends RecyclerView.Adapter<TrackViewAdapter.View
         this.mData = data;
     }
 
+    public void updateData(List<Track> data) {
+        mData = data;
+        notifyDataSetChanged();
+    }
+
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

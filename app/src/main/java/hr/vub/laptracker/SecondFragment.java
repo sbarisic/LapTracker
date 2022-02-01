@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,29 +38,63 @@ public class SecondFragment extends Fragment {
         List<Track> tracks = act.db.trackDAO().getTracks();
 
         // set up the RecyclerView
+        LinearLayoutManager layoutMgr = new LinearLayoutManager(act);
+
         RecyclerView recyclerView = binding.recyclerTracks;
-        recyclerView.setLayoutManager(new LinearLayoutManager(act));
+        recyclerView.setLayoutManager(layoutMgr);
         adapter = new TrackViewAdapter(getActivity(), tracks);
 
         adapter.setClickListener((view, position) -> {
             Track clickedTrack = adapter.getItem(position);
             act.db.trackDAO().selectTrack(clickedTrack.id);
 
-            NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
+            updateBindings();
+            // NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
             //Toast .makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         });
 
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), layoutMgr.getOrientation()));
         recyclerView.setAdapter(adapter);
 
+        updateBindings();
         return binding.getRoot();
+    }
+
+    void updateBindings() {
+        Track selectedTrack = act.db.trackDAO().getSelectedTrack();
+
+        boolean btnsEnabled = selectedTrack != null;
+        //binding.btnOk.setEnabled(btnsEnabled);
+        binding.btnDelete.setEnabled(btnsEnabled);
+
+        if (selectedTrack != null) {
+            binding.tvSelectedTrack.setText(selectedTrack.track_id);
+        } else {
+            binding.tvSelectedTrack.setText(R.string.txt_no_track_selected);
+        }
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /*binding.btnOk.setOnClickListener(view1 -> {
+            NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
+        });*/
+
         binding.btnNewTrack.setOnClickListener(view1 -> {
             act.startRecordingMode();
             NavHostFragment.findNavController(SecondFragment.this).navigate(R.id.action_SecondFragment_to_FirstFragment);
+        });
+
+        binding.btnDelete.setOnClickListener(view1 -> {
+            TrackDAO dao = act.db.trackDAO();
+            Track selectedTrack = dao.getSelectedTrack();
+
+            dao.delete(dao.getPointsForTrack(selectedTrack.id));
+            dao.delete(selectedTrack);
+
+            adapter.updateData(dao.getTracks());
+            updateBindings();
         });
     }
 

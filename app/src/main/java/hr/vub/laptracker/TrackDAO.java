@@ -16,6 +16,9 @@ public interface TrackDAO {
     @Update()
     void update(Track track);
 
+    @Delete()
+    void delete(Track track);
+
     @Query("DELETE FROM tracks")
     void deleteAllTracks();
 
@@ -40,6 +43,9 @@ public interface TrackDAO {
 
     @Delete()
     void delete(TrackPoint point);
+
+    @Delete()
+    void delete(List<TrackPoint> points);
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     void insert(List<TrackPoint> points);

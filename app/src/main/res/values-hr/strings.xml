@@ -29,4 +29,6 @@
     <string name="btn_cancel">Odustani</string>
     <string name="new_record">Rekord:</string>
     <string name="finish">Kraj:</string>
+    <string name="btn_delete">Obriši</string>
+    <string name="btn_select">Izaberi</string>
 </resources>

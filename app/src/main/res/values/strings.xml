@@ -33,6 +33,8 @@
     <string name="btn_cancel">Cancel</string>
     <string name="new_record">Record:</string>
     <string name="finish">Finish:</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_select">Select</string>
 
 
     <!-- Preference Titles -->

@@ -5,6 +5,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.osmdroid.util.GeoPoint;
+
+import java.util.List;
+
 @Entity(tableName = "tracks")
 public class Track {
     @PrimaryKey(autoGenerate = true)
@@ -39,5 +43,18 @@ public class Track {
     public void calcAvgSpeed() {
         double speed_ms = distance / (best_time_ms / 1000.0);
         avg_speed = (int) (speed_ms * 3.6);
+    }
+
+    public void calcDist(List<GeoPoint> points) {
+        double dist = 0;
+        GeoPoint prevPoint = points.get(0);
+
+        for (int i = 1; i < points.size(); i++) {
+            GeoPoint curPoint = points.get(i);
+            dist += prevPoint.distanceToAsDouble(curPoint);
+            prevPoint = curPoint;
+        }
+
+        distance = (int) dist;
     }
 }
