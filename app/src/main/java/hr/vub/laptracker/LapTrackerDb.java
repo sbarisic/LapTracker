@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {Track.class, TrackPoint.class}, version = 7, exportSchema = false)
+@Database(entities = {Track.class, TrackPoint.class}, version = 8, exportSchema = false)
 public abstract class LapTrackerDb extends RoomDatabase {
     public abstract TrackDAO trackDAO();
 
@@ -28,7 +28,7 @@ public abstract class LapTrackerDb extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), LapTrackerDb.class, "laptracker_db").allowMainThreadQueries().fallbackToDestructiveMigration().build();
 
-                    // FillDatabase();
+                     // FillDatabase();
                 }
             }
         }
@@ -40,24 +40,26 @@ public abstract class LapTrackerDb extends RoomDatabase {
         dao.deleteAllTracks();
         dao.deleteAllTrackPoints();
 
-        // Generate tracks
-        Track t1 = new Track("Trojstvo - Sandrovac", 611132);
+        // Generate track
+        Track t1 = new Track("Trojstvo - Sandrovac", 0, 0);
         dao.insert(t1);
 
-        /*Track t2 = new Track("Track B", 540000);
-        dao.insert(t2);
-
-        Track t3 = new Track("Track C", 660000);
-        dao.insert(t3);*/
-
-        // Generate points
-
         Track selTrack = dao.getTracks().get(0);
-        //dao.selectTrack(selTrack.id);
-        dao.insert(GenerateTrack(selTrack));
+
+        List<GeoPoint> geoPoints = GenerateTrack();
+        ArrayList<TrackPoint> trackPts = new ArrayList<>();
+
+        for (int i = 0; i < geoPoints.size(); i++) {
+            TrackPoint pt = new TrackPoint(selTrack.id, i, geoPoints.get(i).getLatitude(), geoPoints.get(i).getLongitude());
+            trackPts.add(pt);
+        }
+
+        selTrack.distance = MainActivity.measureDistance(geoPoints);
+        dao.update(selTrack);
+        dao.insert(trackPts);
     }
 
-    static ArrayList<TrackPoint> GenerateTrack(Track t) {
+    static ArrayList<GeoPoint> GenerateTrack() {
         ArrayList<GeoPoint> pts = new ArrayList<>();
         pts.add(new GeoPoint(45.92085, 16.96896));
         pts.add(new GeoPoint(45.920565, 16.96894));
@@ -164,14 +166,6 @@ public abstract class LapTrackerDb extends RoomDatabase {
         pts.add(new GeoPoint(45.91514, 16.98883));
         pts.add(new GeoPoint(45.91491, 16.9889));
         pts.add(new GeoPoint(45.91479, 16.98894));
-
-        ArrayList<TrackPoint> trackPts = new ArrayList<>();
-
-        for (int i = 0; i < pts.size(); i++) {
-            TrackPoint pt = new TrackPoint(t.id, i, pts.get(i).getLatitude(), pts.get(i).getLongitude());
-            trackPts.add(pt);
-        }
-
-        return trackPts;
+        return pts;
     }
 }

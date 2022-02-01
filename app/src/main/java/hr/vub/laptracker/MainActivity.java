@@ -115,12 +115,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void startRecordingMode() {
         db.trackDAO().clearSelectedTrack();
+
+        startTime = System.currentTimeMillis();
         curTrack = null;
         recordingMode = true;
         logicPaused = false;
     }
 
     public void stopRecordingModeAndSave() {
+        endTime = System.currentTimeMillis();
         recordingMode = false;
         logicPaused = true;
     }
@@ -263,7 +266,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.w("LAPTRACKER", "Finish 1!");
                     }
 
-
                     Log.w("LAPTRACKER", "Idx = " + closestIdx);
                     Log.w("LAPTRACKER", "Dist = " + closestDist);
 
@@ -271,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                     firstFragment.updateTime(delta);
                 }
 
-                if (closestIdx == len - 1 && closestDist < 15) {
+                if (closestIdx == len - 1 && closestDist < 20) {
                     if (endTime == 0)
                         endTime = System.currentTimeMillis();
 
@@ -292,12 +294,27 @@ public class MainActivity extends AppCompatActivity {
 
         if (timeDelta < oldBestTime || oldBestTime == 0) {
             selectedTrack.best_time_ms = timeDelta;
+            selectedTrack.calcAvgSpeed();
+
             db.trackDAO().update(selectedTrack);
 
             firstFragment.finishRace(timeDelta, true);
         } else {
             firstFragment.finishRace(timeDelta, false);
         }
+    }
+
+    static int measureDistance(List<GeoPoint> points) {
+        double dist = 0;
+        GeoPoint prevPoint = points.get(0);
+
+        for (int i = 1; i < points.size(); i++) {
+            GeoPoint curPoint = points.get(i);
+            dist += prevPoint.distanceToAsDouble(curPoint);
+            prevPoint = curPoint;
+        }
+
+        return (int) dist;
     }
 
     @Override

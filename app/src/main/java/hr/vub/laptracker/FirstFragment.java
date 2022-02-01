@@ -149,11 +149,15 @@ public class FirstFragment extends Fragment {
         builder.setView(input);
 
         builder.setPositiveButton(R.string.btn_save_track, (dialog, which) -> {
-            String trackTitle = input.getText().toString();
+            MainActivity act = (MainActivity)getActivity();
 
+            String trackTitle = input.getText().toString();
             TrackDAO dao = act.db.trackDAO();
 
-            Track newTrack = new Track(trackTitle, 0);
+            Track newTrack = new Track(trackTitle, 0, MainActivity.measureDistance(act.curTrack));
+            newTrack.best_time_ms = (int)(act.endTime - act.startTime);
+            newTrack.calcAvgSpeed();
+
             dao.insert(newTrack);
 
             List<Track> allTracks = dao.getTracks();

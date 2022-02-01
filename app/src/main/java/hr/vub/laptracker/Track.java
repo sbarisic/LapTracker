@@ -21,9 +21,23 @@ public class Track {
     @ColumnInfo(name = "selected_track")
     public int selected_track;
 
-    public Track(@NonNull String track_id, int best_time_ms) {
+    @ColumnInfo(name = "distance")
+    public int distance; // m
+
+    @ColumnInfo(name = "avg_speed")
+    public int avg_speed; // km/h
+
+    public Track(@NonNull String track_id, int best_time_ms, int distance) {
+        selected_track = 0;
+        avg_speed = 0;
+
         this.track_id = track_id;
         this.best_time_ms = best_time_ms;
-        selected_track = 0;
+        this.distance = distance;
+    }
+
+    public void calcAvgSpeed() {
+        double speed_ms = distance / (best_time_ms / 1000.0);
+        avg_speed = (int) (speed_ms * 3.6);
     }
 }

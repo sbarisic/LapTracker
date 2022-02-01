@@ -42,6 +42,8 @@ public class TrackViewAdapter extends RecyclerView.Adapter<TrackViewAdapter.View
 
         holder.titleView.setText(curTrack.track_id);
         holder.timeView.setText(String.format("%d:%.2fs", minutes, seconds));
+        holder.distView.setText(String.format("%d m", curTrack.distance));
+        holder.avgSpeedView.setText(String.format("%d km/h", curTrack.avg_speed));
     }
 
     // total number of rows
@@ -55,6 +57,8 @@ public class TrackViewAdapter extends RecyclerView.Adapter<TrackViewAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView titleView;
         TextView timeView;
+        TextView distView;
+        TextView avgSpeedView;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -62,6 +66,8 @@ public class TrackViewAdapter extends RecyclerView.Adapter<TrackViewAdapter.View
             titleView = itemView.findViewById(R.id.tvTitle);
             timeView = itemView.findViewById(R.id.tvTime);
 
+            distView = itemView.findViewById(R.id.tvDist);
+            avgSpeedView = itemView.findViewById(R.id.tvAvgSpeed);
             itemView.setOnClickListener(this);
         }
 
