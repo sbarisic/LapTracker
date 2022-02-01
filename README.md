@@ -5,7 +5,13 @@ VUB Programiranje mobilnih aplikacija - projekt
 
 # Lap timer and tracker application
 
+![alt text](https://raw.githubusercontent.com/sbarisic/LapTracker/main/images/a.png "A")
 
+![alt text](https://raw.githubusercontent.com/sbarisic/LapTracker/main/images/b.png "B")
+
+![alt text](https://raw.githubusercontent.com/sbarisic/LapTracker/main/images/c.png "C")
+
+![alt text](https://raw.githubusercontent.com/sbarisic/LapTracker/main/images/d.png "D")
 
 
 # Other
